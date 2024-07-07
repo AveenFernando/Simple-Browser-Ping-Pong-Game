@@ -1,0 +1,22 @@
+<head>
+    <title>Ping Pong Browser Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="GameCanvas" width="" height=""></canvas>
+    <script>
+        var canvasContext;
+        var canvas = document.getElementById('GameCanvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight
+
+        window.onload = function() {
+            console.log("Hello World");
+            canvas = document.getElementById('GameCanvas');
+            canvasContext = canvas.getContext('2d');
+            canvasContext.fillStyle = 'black';
+            canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+
