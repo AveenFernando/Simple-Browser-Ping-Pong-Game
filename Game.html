@@ -16,6 +16,30 @@
             canvasContext = canvas.getContext('2d');
             canvasContext.fillStyle = 'black';
             canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+
+            //White Box 1
+            // Calculating the white box 1's dimensions as percentages of canvas size
+            var whiteBox1Width = canvas.width * 0.005; // 0.5% of canvas width
+            var whiteBox1Height = canvas.height * 0.07; // 7% of canvas height
+
+            // Positioning the white box
+            var whiteBox1X = (canvas.width - whiteBox1Width) / 12;
+            var whiteBox1Y = (canvas.height - whiteBox1Height) / 2;
+
+            canvasContext.fillStyle = 'white';
+            canvasContext.fillRect(whiteBox1X, whiteBox1Y, whiteBox1Width, whiteBox1Height);
+
+            //White Box 2
+            // Calculating the white box 2's dimensions as percentages of canvas size
+            var whiteBox2Width = canvas.width * 0.005; // 0.5% of canvas width
+            var whiteBox2Height = canvas.height * 0.07; // 7% of canvas height
+
+            // Positioning the white box
+            var whiteBox2X = (canvas.width - whiteBox2Width) / 1.1;
+            var whiteBox2Y = (canvas.height - whiteBox2Height) / 2;
+
+            canvasContext.fillStyle = 'white';
+            canvasContext.fillRect(whiteBox2X, whiteBox2Y, whiteBox2Width, whiteBox2Height);
         }
     </script>
 </body>
