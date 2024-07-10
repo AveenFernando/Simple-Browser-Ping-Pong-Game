@@ -3,81 +3,46 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="GameCanvas" width="" height=""></canvas>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="whiteBox" width="10" height="100"></canvas>
     <script>
+        var canvas;
         var canvasContext;
-        var canvas = document.getElementById('GameCanvas');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight
-        var redBallX;
-        var redBallY;
-        var redBallSpeedX = canvas.width * 0.0001;
-
-        window.onload = function() 
-        {
-            console.log("Hello World");
-            canvas = document.getElementById('GameCanvas');
+        var ballX = 50;
+        var ballSpeedX = 10;
+        var whitebox;
+        var whiteboxContext;
+        
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
-            var fps = 45;
-            setInterval(function()
-            {
-            moveEverything();
-            drawEverything();
-            }, 
-            1000/fps);
+            whiteBox = document.getElementById('whiteBox');
+            whiteBoxContext = whiteBox.getContext('2d');
+        
+            var framesPerSecond = 30;
+            setInterval(function() {
+                    moveEverything();
+                    drawEverything();	
+                }, 1000/framesPerSecond);
         }
-
-        function moveEverything()
-        {
-             redBallX = redBallX + redBallSpeedX;
-             redBallSpeedX = redBallSpeedX + (canvas.width + 0.00005);
+        
+        function moveEverything() {
+            ballX = ballX + ballSpeedX;
+            if(ballX > canvas.width) {
+                ballSpeedX = -ballSpeedX;
+            }
         }
-
-        function drawEverything()
-        {
+        
+        function drawEverything() {
             canvasContext.fillStyle = 'black';
-            canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-
-            //White Box 1
-            //Calculating the white box 1's dimensions as percentages of canvas size
-            var whiteBox1Width = canvas.width * 0.005; // 0.5% of canvas width
-            var whiteBox1Height = canvas.height * 0.07; // 7% of canvas height
-
-            //Positioning the white box
-            var whiteBox1X = (canvas.width - whiteBox1Width) / 12;
-            var whiteBox1Y = (canvas.height - whiteBox1Height) / 2;
-
+            canvasContext.fillRect(0,0,canvas.width,canvas.height);
             canvasContext.fillStyle = 'white';
-            canvasContext.fillRect(whiteBox1X, whiteBox1Y, whiteBox1Width, whiteBox1Height);
-
-            //White Box 2
-            //Calculating the white box 2's dimensions as percentages of canvas size
-            var whiteBox2Width = canvas.width * 0.005; // 0.5% of canvas width
-            var whiteBox2Height = canvas.height * 0.07; // 7% of canvas height
-
-            //Positioning the white box
-            var whiteBox2X = (canvas.width - whiteBox2Width) / 1.1;
-            var whiteBox2Y = (canvas.height - whiteBox2Height) / 2;
-
-            canvasContext.fillStyle = 'white';
-            canvasContext.fillRect(whiteBox2X, whiteBox2Y, whiteBox2Width, whiteBox2Height);
-
-            //Red Ball
-            //Calculating the red ball's dimensions as percentages of canvas size
-            var redBallWidth = canvas.width * 0.0045; //0.001% of canvas width
-            var redBallHeight = canvas.height * 0.009; //0.001% of canvas height
-
-            //Positioning the red ball
-            redBallX = (canvas.width - redBallWidth) / 3; 
-            redBallY = (canvas.height - redBallHeight) / 3;
-
+            canvasContext.fillRect(0,210,whiteBox.width,whiteBox.height);
             canvasContext.fillStyle = 'red';
-            canvasContext.fillRect(redBallX, redBallY, redBallWidth, redBallHeight);
-            canvasContext.fill();
-            canvasContext.beginPath();
-
+            canvasContext.fillRect(ballX,100,10,10);
         }
-
-    </script>
+        
+        </script>
+        
 </body>
 
