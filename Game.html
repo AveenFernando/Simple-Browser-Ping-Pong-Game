@@ -1,48 +1,151 @@
 <head>
-    <title>Ping Pong Browser Game</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Fullscreen Responsive Ping Pong Browser Game</title>
+    <style>
+        body, html 
+        {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #gameCanvas 
+        {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #fullscreenButton 
+        {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            padding: 10px;
+            background-color: black;
+            border: none;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        #fullscreenButton:hover 
+        {
+            background-color: white;
+            color: black;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <canvas id="whiteBox" width="10" height="100"></canvas>
+    <canvas id="gameCanvas"></canvas>
+    <button id="fullscreenButton">Fullscreen</button>
     <script>
-        var canvas;
-        var canvasContext;
-        var ballX = 50;
-        var ballSpeedX = 10;
-        var whitebox;
-        var whiteboxContext;
-        
-        window.onload = function() {
-            canvas = document.getElementById('gameCanvas');
-            canvasContext = canvas.getContext('2d');
-            whiteBox = document.getElementById('whiteBox');
-            whiteBoxContext = whiteBox.getContext('2d');
-        
-            var framesPerSecond = 30;
-            setInterval(function() {
-                    moveEverything();
-                    drawEverything();	
-                }, 1000/framesPerSecond);
+    const ASPECT_RATIO = 16 / 10;
+    const PADDLE_WIDTH_PERCENT = 0.0125;
+    const PADDLE_HEIGHT_PERCENT = 0.2;
+    const BALL_SIZE_PERCENT = 0.0125;
+    const BALL_SPEED_PERCENT = 0.0125;
+
+    let canvas, canvasContext;
+    let gameWidth, gameHeight;
+    let ballX, ballY, ballSize, ballSpeedX, ballSpeedY;
+    let paddleWidth, paddleHeight, paddleY;
+
+    function resizeGame() {
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const windowAspectRatio = windowWidth / windowHeight;
+
+        if (windowAspectRatio > ASPECT_RATIO) {
+            gameHeight = windowHeight;
+            gameWidth = gameHeight * ASPECT_RATIO;
+        } else {
+            gameWidth = windowWidth;
+            gameHeight = gameWidth / ASPECT_RATIO;
         }
-        
-        function moveEverything() {
-            ballX = ballX + ballSpeedX;
-            if(ballX > canvas.width) {
-                ballSpeedX = -ballSpeedX;
+
+        canvas.width = gameWidth;
+        canvas.height = gameHeight;
+
+        //Player Paddle Properties
+        paddleWidth = gameWidth * PADDLE_WIDTH_PERCENT;
+        paddleHeight = gameHeight * PADDLE_HEIGHT_PERCENT;
+        paddleY = (gameHeight - paddleHeight) / 2;
+
+        //Shot Ball Properties
+        ballSize = gameWidth * BALL_SIZE_PERCENT;
+        ballSpeedX = gameWidth * BALL_SPEED_PERCENT;
+        ballSpeedY = gameHeight * BALL_SPEED_PERCENT / 2;
+
+        if (!ballX) ballX = gameWidth / 2;
+        if (!ballY) ballY = gameHeight / 2;
+    }
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox Fullscreen
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera Fullscreen
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge Fullscreen
+                document.documentElement.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox Exit Fullscreen
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera Exit Fullscreen
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge Exit Fullscreen
+                document.msExitFullscreen();
             }
         }
-        
-        function drawEverything() {
-            canvasContext.fillStyle = 'black';
-            canvasContext.fillRect(0,0,canvas.width,canvas.height);
-            canvasContext.fillStyle = 'white';
-            canvasContext.fillRect(0,210,whiteBox.width,whiteBox.height);
-            canvasContext.fillStyle = 'red';
-            canvasContext.fillRect(ballX,100,10,10);
-        }
-        
-        </script>
-        
-</body>
+    }
 
+    window.onload = function() {
+        canvas = document.getElementById('gameCanvas');
+        canvasContext = canvas.getContext('2d');
+
+        resizeGame();
+        window.addEventListener('resize', resizeGame);
+
+        document.getElementById('fullscreenButton').addEventListener('click', toggleFullscreen);
+
+        const framesPerSecond = 60;
+        setInterval(function() {
+            moveEverything();
+            drawEverything();
+        }, 1000/framesPerSecond);
+    }
+
+    function moveEverything() {
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+
+        if (ballX > gameWidth - ballSize || ballX < 0) {
+            ballSpeedX = -ballSpeedX;
+        }
+        if (ballY > gameHeight - ballSize || ballY < 0) {
+            ballSpeedY = -ballSpeedY;
+        }
+    }
+
+    function drawEverything() {
+        // Clear canvas
+        canvasContext.fillStyle = 'black';
+        canvasContext.fillRect(0, 0, gameWidth, gameHeight);
+
+        // Draw paddle
+        canvasContext.fillStyle = 'white';
+        canvasContext.fillRect(0, paddleY, paddleWidth, paddleHeight);
+
+        // Draw ball
+        canvasContext.fillStyle = 'red';
+        canvasContext.fillRect(ballX, ballY, ballSize, ballSize);
+    }
+    </script>
+</body>
